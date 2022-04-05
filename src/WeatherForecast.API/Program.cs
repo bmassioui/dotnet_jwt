@@ -8,13 +8,8 @@ using WeatherForecast.API.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// DbContext EF
-builder.Services.AddDbContext<WeatherForecastDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("WeatherForecastConnectionStrings")));
-
-// Identity EF
-builder.Services.AddIdentity<IdentityUser, IdentityRole>()
-.AddEntityFrameworkStores<WeatherForecastDbContext>()
-.AddDefaultTokenProviders();
+// Resolve EF DbContext Dependency Injection
+ResolveDIForDbContext(builder);
 
 // Adding Authentication
 ConfigureAuthentication(builder);
@@ -101,4 +96,22 @@ static void ConfigureAuthentication(WebApplicationBuilder builder)
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"]))
         };
     });
+}
+
+static void ResolveDIForDbContext(WebApplicationBuilder builder)
+{
+    // DbContext EF
+    builder.Services.AddDbContext<WeatherForecastDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("WeatherForecastConnectionStrings")));
+
+    // Identity EF
+    builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
+    {
+        options.Password.RequiredLength = 8;
+        options.Password.RequireNonAlphanumeric = true;
+        options.Password.RequireUppercase = true;
+        options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(1d);
+        options.Lockout.MaxFailedAccessAttempts = 5;
+    })
+    .AddEntityFrameworkStores<WeatherForecastDbContext>()
+    .AddDefaultTokenProviders();
 }

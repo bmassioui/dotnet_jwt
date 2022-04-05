@@ -1,3 +1,4 @@
+#nullable disable
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -8,8 +9,8 @@ using WeatherForecast.API.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Resolve EF DbContext Dependency Injection
-ResolveDIForDbContext(builder);
+// Resolve EF DbContexts Dependency Injection
+ResolveEFDependencyInjection(builder);
 
 // Adding Authentication
 ConfigureAuthentication(builder);
@@ -19,10 +20,12 @@ ConfigureAuthentication(builder);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-
+// Configure Swagger Generator to support Bearer Token - Jwt
 ConfigureSwaggerGen(builder);
 
 var app = builder.Build();
+
+RunMissingMigrations(app);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -98,7 +101,7 @@ static void ConfigureAuthentication(WebApplicationBuilder builder)
     });
 }
 
-static void ResolveDIForDbContext(WebApplicationBuilder builder)
+static void ResolveEFDependencyInjection(WebApplicationBuilder builder)
 {
     // DbContext EF
     builder.Services.AddDbContext<WeatherForecastDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("WeatherForecastConnectionStrings")));
@@ -114,4 +117,14 @@ static void ResolveDIForDbContext(WebApplicationBuilder builder)
     })
     .AddEntityFrameworkStores<WeatherForecastDbContext>()
     .AddDefaultTokenProviders();
+}
+
+static void RunMissingMigrations(WebApplication app)
+{
+    using (var scope = app.Services.CreateScope())
+    {
+        var serviceScope = scope.ServiceProvider;
+        var context = serviceScope.GetService<WeatherForecastDbContext>();
+        context.Database.Migrate();
+    }
 }

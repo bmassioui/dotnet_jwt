@@ -68,7 +68,23 @@ public class AuthController : ControllerBase
     [Route("register")]
     public async Task<IActionResult> RegisterAsync([FromBody] RegisterDto registerDto)
     {
-        throw new NotImplementedException();
+        var isUserAlreadyExists = await _userManager.FindByNameAsync(registerDto.Username) is not null;
+
+        if (isUserAlreadyExists) return BadRequest($"User {registerDto.Username} already exists, Please try to login.");
+
+        IdentityUser userToCreate = new()
+        {
+            Email = registerDto.Email,
+            SecurityStamp = Guid.NewGuid().ToString(),
+            UserName = registerDto.Username
+        };
+
+        var registeringResult = await _userManager.CreateAsync(userToCreate, registerDto.Password);
+
+        // CodeStatus: 500 should not be shown to consumer, only maintainer who should notified with what's going wrong during the registration
+        if (!registeringResult.Succeeded) return StatusCode(StatusCodes.Status500InternalServerError, new ResponseDto { Status = "Error", Message = "User creation failed! Please check user details and try again." });
+
+        return Created(string.Empty, new ResponseDto { Status = "Success", Message = "User created successfully!" });
     }
 
     /// <summary>

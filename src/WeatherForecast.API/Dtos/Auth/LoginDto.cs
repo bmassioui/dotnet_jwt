@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace WeatherForecast.API.Dtos;
+namespace WeatherForecast.API.Dtos.Auth;
 
 public class LoginDto
 {

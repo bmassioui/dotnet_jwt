@@ -1,12 +1,13 @@
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 using WeatherForecast.API.Dtos;
 using WeatherForecast.API.Dtos.Auth;
-using static WeatherForecast.API.Utilities.Enums;
+using WeatherForecast.API.Utilities;
 
 namespace WeatherForecast.API.Controllers.Auth;
 
@@ -89,7 +90,7 @@ public class AuthController : ControllerBase
         if (!registeringResult.Succeeded) return StatusCode(StatusCodes.Status500InternalServerError, new ResponseDto { Status = "Error", Message = "User creation failed! Please check user details and try again." });
 
         // Mark the new user as simple User
-        var addingUserToRoleResult = await _userManager.AddToRoleAsync(userToCreate, Roles.User.ToString());
+        var addingUserToRoleResult = await _userManager.AddToRoleAsync(userToCreate, Constants.USER_ROLE);
 
         // CodeStatus: 500 should not be shown to consumer, only maintainer who should notified with what's going wrong during the registration
         if (!addingUserToRoleResult.Succeeded) return StatusCode(StatusCodes.Status500InternalServerError, new ResponseDto { Status = "Error", Message = "User creation failed!" });
@@ -105,22 +106,23 @@ public class AuthController : ControllerBase
     /// <returns></returns>
     [HttpPost]
     [Route("add/{username}/role")]
-    public async Task<IActionResult> AddUserToRoleAssync(string username, [FromBody] Roles rolename)
+    [Authorize(Roles = Constants.ADMIN_ROLE)]
+    public async Task<IActionResult> AddUserToRoleAssync(string username, [FromBody] string rolename)
     {
         var user = await _userManager.FindByNameAsync(username);
 
         if (user is null) return BadRequest($"{username} is invalid as Username.");
 
-        var role = _roleManager.FindByNameAsync(rolename.ToString());
+        var role = _roleManager.FindByNameAsync(rolename);
 
         if (role is null) return BadRequest($"{rolename} is invalid as RoleName, Please contact administrator for creating new role.");
 
-        var addingUserToRoleResult = await _userManager.AddToRoleAsync(user, rolename.ToString());
+        var addingUserToRoleResult = await _userManager.AddToRoleAsync(user, rolename);
 
         // CodeStatus: 500 should not be shown to consumer, only maintainer who should notified with what's going wrong during the registration
         if (!addingUserToRoleResult.Succeeded) return StatusCode(StatusCodes.Status500InternalServerError, new ResponseDto { Status = "Error", Message = "User creation failed!" });
 
-        return Ok(new ResponseDto { Status = "Success", Message = $"User:{username} added successfully to role:{rolename.ToString()}." });
+        return Ok(new ResponseDto { Status = "Success", Message = $"User:{username} added successfully to role:{rolename}." });
 
     }
 

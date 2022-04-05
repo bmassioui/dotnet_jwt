@@ -1,6 +1,8 @@
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using WeatherForecast.API.Dtos;
 using WeatherForecast.API.Dtos.Auth;
 
 namespace WeatherForecast.API.Controllers.Auth;
@@ -29,7 +31,32 @@ public class AuthController : ControllerBase
     [Route("login")]
     public async Task<IActionResult> LoginAsync([FromBody] LoginDto loginDto)
     {
-        throw new NotImplementedException();
+        var user = await _userManager.FindByNameAsync(loginDto.Username);
+
+        if (user is null) return BadRequest("Invalid Username.");
+
+        var isPasswordValid = await _userManager.CheckPasswordAsync(user, loginDto.Password);
+
+        if (!isPasswordValid) return BadRequest("Invalid Password.");
+
+        var userRoles = await _userManager.GetRolesAsync(user);
+
+        var authClaims = new List<Claim>
+        {
+            new Claim(ClaimTypes.Name, user.UserName),
+            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+        };
+
+        if (userRoles.Any()) authClaims.AddRange(userRoles.Select(role => new Claim(ClaimTypes.Role, role)));
+
+        var token = GenerateJwt();
+
+        return Ok(new
+        {
+            token = new JwtSecurityTokenHandler().WriteToken(token),
+            expiration = token.ValidTo
+        });
+
     }
 
     /// <summary>

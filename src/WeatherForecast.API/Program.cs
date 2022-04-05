@@ -1,4 +1,16 @@
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using WeatherForecast.API.Data;
+
 var builder = WebApplication.CreateBuilder(args);
+
+// DbContext EF
+builder.Services.AddDbContext<WeatherForecastDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("WeatherForecastConnectionStrings")));
+
+// Identity EF
+builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+.AddEntityFrameworkStores<WeatherForecastDbContext>()
+.AddDefaultTokenProviders();
 
 // Add services to the container.
 

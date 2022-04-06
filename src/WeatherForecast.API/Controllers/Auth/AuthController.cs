@@ -113,7 +113,7 @@ public class AuthController : ControllerBase
 
         if (user is null) return BadRequest($"{username} is invalid as Username.");
 
-        var role = _roleManager.FindByNameAsync(rolename);
+        var role = await _roleManager.FindByNameAsync(rolename);
 
         if (role is null) return BadRequest($"{rolename} is invalid as RoleName, Please contact administrator for creating new role.");
 

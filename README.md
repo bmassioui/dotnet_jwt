@@ -12,8 +12,8 @@ Secure .NET 6 WebAPI with JWT and Identity framework.
 - **Request a Forbiden resources (Role Based Access) - 403**  
   ![Request a Forbiden resources](https://github.com/bmassioui/dotnet_jwt/blob/master/assets/403%20forbiden%20-%20Only%20Admins.png)
   
-- **Request Authorized resources - 200**  
-  ![Request Authorized resources](sdsdsds)
+- **As an Admin grant Admin Role to User - 200**  
+  ![Request Authorized resources](https://github.com/bmassioui/dotnet_jwt/blob/master/assets/Add_User_To_Admin_Role_Admin_Only.png)
   
 - **Decode JWT using secret key**  
   ![Decode JWT](https://github.com/bmassioui/dotnet_jwt/blob/master/assets/Decode%20-%20Admin%20JWT.png)

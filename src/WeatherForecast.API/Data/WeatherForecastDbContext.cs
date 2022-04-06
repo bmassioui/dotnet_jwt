@@ -46,7 +46,7 @@ public class WeatherForecastDbContext : IdentityDbContext<IdentityUser>
             LockoutEnabled = false
         };
         var passwordHasher = new PasswordHasher<IdentityUser>();
-        passwordHasher.HashPassword(bobAsAdmin, Constants.BOB_PWD);
+        bobAsAdmin.PasswordHash = passwordHasher.HashPassword(bobAsAdmin, Constants.BOB_PWD);
 
         builder.Entity<IdentityUser>().HasData(bobAsAdmin);
     }

@@ -106,7 +106,7 @@ public class AuthController : ControllerBase
     /// <returns></returns>
     [HttpPost]
     [Route("add/{username}/role")]
-    [Authorize(Roles = Constants.ADMIN_ROLE)]
+    // [Authorize(Roles = Constants.ADMIN_ROLE)]
     public async Task<IActionResult> AddUserToRoleAssync(string username, [FromBody] string rolename)
     {
         var user = await _userManager.FindByNameAsync(username);

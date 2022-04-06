@@ -17,8 +17,8 @@ BEGIN TRY
           ('cbbf3ac1-c542-41de-abbc-a14fa6895724', 'User', 'User', '2')
 
     --- Insert Admin User - Bob
-    INSERT INTO dbo.AspNetUsers(Id, UserName, Email, EmailConfirmed, ConcurrencyStamp, PasswordHash, AccessFailedCount, PhoneNumber, PhoneNumberConfirmed, TwoFactorEnabled, LockoutEnabled)
-    VALUES('b74ddd14-6340-4840-95c2-db12554843e5', 'Bob', 'Bob@ITech.com', 1, '1', 'AQAAAAEAACcQAAAAEL6ZsxjaYdjTjBbiA62Sv9bDAXdxkyhCNWJSTso9qd+hmJtX/SDbeQWE9+baZPPryA==', 3, '123456789', 1, 0, 0); --- PWD : Admin*123
+    INSERT INTO dbo.AspNetUsers(Id, UserName, NormalizedUserName, Email, EmailConfirmed, ConcurrencyStamp, PasswordHash, AccessFailedCount, PhoneNumber, PhoneNumberConfirmed, TwoFactorEnabled, LockoutEnabled)
+    VALUES('b74ddd14-6340-4840-95c2-db12554843e5', 'Bob', 'Bob','Bob@ITech.com', 1, '1', 'AQAAAAEAACcQAAAAEL6ZsxjaYdjTjBbiA62Sv9bDAXdxkyhCNWJSTso9qd+hmJtX/SDbeQWE9+baZPPryA==', 3, '123456789', 1, 0, 0); --- PWD : Admin*123
 
     --- Set Bob as Admin user
     INSERT INTO dbo.AspNetUserRoles(UserId, RoleId)

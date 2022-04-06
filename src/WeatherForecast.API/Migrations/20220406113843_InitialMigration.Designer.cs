@@ -12,7 +12,7 @@ using WeatherForecast.API.Data;
 namespace WeatherForecast.API.Migrations
 {
     [DbContext(typeof(WeatherForecastDbContext))]
-    [Migration("20220406111643_InitialMigration")]
+    [Migration("20220406113843_InitialMigration")]
     partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -49,22 +49,6 @@ namespace WeatherForecast.API.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "fab4fac1-c546-41de-aebc-a14da6895711",
-                            ConcurrencyStamp = "1",
-                            Name = "Admin",
-                            NormalizedName = "Admin"
-                        },
-                        new
-                        {
-                            Id = "cbbf3ac1-c542-41de-abbc-a14fa6895724",
-                            ConcurrencyStamp = "2",
-                            Name = "User",
-                            NormalizedName = "User"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -155,22 +139,6 @@ namespace WeatherForecast.API.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "b74ddd14-6340-4840-95c2-db12554843e5",
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "d8acde6a-f032-400c-b465-1c960be1d1ac",
-                            Email = "bob@itech.com",
-                            EmailConfirmed = false,
-                            LockoutEnabled = false,
-                            PasswordHash = "AQAAAAEAACcQAAAAEG/vmrh8cUZTDqTJyCfQ6Jb7sFZvSHngmoOlFiPpgwZyensLdRWgCIPgfT+GTr41Lw==",
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "07061976-5f25-464b-9ddf-a1a80afb8e3f",
-                            TwoFactorEnabled = false,
-                            UserName = "Bob"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -233,13 +201,6 @@ namespace WeatherForecast.API.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            UserId = "b74ddd14-6340-4840-95c2-db12554843e5",
-                            RoleId = "fab4fac1-c546-41de-aebc-a14da6895711"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>

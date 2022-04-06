@@ -14,9 +14,12 @@ public class WeatherForecastDbContext : IdentityDbContext<IdentityUser>
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
+        
+        #region seeding preconfigured data
         SeedPreconfiguredRoles(builder);
         SeedPreconfiguredUser(builder);
         SeedUserRoles(builder);
+        #endregion seeding preconfigured data
     }
 
     #region seeders
